@@ -1,6 +1,8 @@
+import silvestre.*
 
 object pepita {
 	var energia = 100
+	var property position = game.center()
 
 	method comer(comida) {
 		energia = energia + comida.energiaQueOtorga()
@@ -14,5 +16,18 @@ object pepita {
 		return energia
 	}
 
+	method image() {
+		if (self.puedeCapturarAPepita()) {
+			return "pepita-gris.png"
+		}
+		else {
+			return "pepita.png"
+		}
+	}
+
+	method puedeCapturarAPepita() {
+		return silvestre.position() == self.position()
+	}
 }
+
 

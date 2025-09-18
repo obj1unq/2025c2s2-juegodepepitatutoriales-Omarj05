@@ -1,5 +1,6 @@
 import wollok.game.*
 import pepita.*
+import silvestre.*
 
 program pepitaGame {
 	game.title("Pepita") 	//Valor por defecto "Wollok Game"
@@ -9,6 +10,7 @@ program pepitaGame {
 	//search assets in assets folder, for example, for the background
 	//Valor por defecto game.ground("ground.png")
 	
-	//game.addVisual(pepita)
-	game.start()	
+	game.addVisual(silvestre)
+	game.addVisualCharacter(pepita)
+	game.start()
 }

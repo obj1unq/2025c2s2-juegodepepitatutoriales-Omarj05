@@ -9,7 +9,7 @@ En este segundo nivel se necesita que pepita gaste energía cada vez que se muev
 ### Requerimientos
 - Pepita comienza con energía = 500.
 - Configurar las teclas arriba, abajo, izquierda y derecha para que mueva a Pepita a las respectivas posiciones. Pepita debe volar hacia la nueva distancia, y gastará 9 joules de energía por cada kilómetro volado (considerar la distancia entre la posición nueva y la anterior).
-- Cuando Pepita agota su energía, no debe poder moverse mas y su aspecto cambia (se ve gris)
+- Cuando Pepita agota su energía, no debe poder moverse mas y asu aspecto cambia (se ve gris)
 
 - **BONUS**: 
   - Antes de mover a pepita, controlar que no se vaya del rango visible del juego.

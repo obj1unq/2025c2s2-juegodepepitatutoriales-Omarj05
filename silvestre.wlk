@@ -8,6 +8,5 @@ object silvestre {
             return game.at(3, 0)
         }
         else { return  game.at(pepita.position().x(), 0) }
-        
     }
 }

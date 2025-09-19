@@ -12,5 +12,8 @@ program pepitaGame {
 	
 	game.addVisual(silvestre)
 	game.addVisualCharacter(pepita)
+	pepita.gastarEnergiaCuandoSeMueve()
+	keyboard.space().onPressDo({ game.say(pepita, pepita.energia())})
 	game.start()
 }
+

@@ -1,7 +1,7 @@
 import silvestre.*
 
 object pepita {
-	var energia = 100
+	var energia = 500
 	var property position = game.center()
 
 	method comer(comida) {
@@ -28,6 +28,14 @@ object pepita {
 	method puedeCapturarAPepita() {
 		return silvestre.position() == self.position()
 	}
+
+	method gastarEnergiaCuandoSeMueve() {
+		keyboard.left().onPressDo({ energia = energia - 9})
+		keyboard.right().onPressDo({ energia = energia - 9})
+		keyboard.up().onPressDo({  energia = energia - 9})
+		keyboard.down().onPressDo({ energia = energia - 9})
+	}
+
 }
 
 

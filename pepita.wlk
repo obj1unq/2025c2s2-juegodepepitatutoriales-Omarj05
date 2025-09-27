@@ -9,9 +9,12 @@ object pepita {
 	//acciones
 	method comer(comida) {
 		energia = energia + comida.energiaQueOtorga()
+		game.removeVisual(comida)
 	}
 
-	method volar(kms) { energia = (energia - (9 * kms)).max(0) }
+	method volar(kms) { 
+		energia = (energia - (9 * kms)).max(0) 
+	}
 	
 	method mover(direccion) { 
 		if (!self.hayMuroEnDireccion(direccion)) {
@@ -25,10 +28,19 @@ object pepita {
 	}
 
 	method perderAltura()  { 
-		self.validarSiEsAtrapadaPorElCazador()
 		if (!self.hayMuroEnDireccion(abajo)) {
 			position = game.at(position.x(), position.down(1).y().max(0)) 
 		}
+	}
+
+	method perderJuego() {
+		game.say(self, "¡PERDÍ!")
+		game.onTick(2000, "Perder juego", {game.stop()})
+	}
+
+	method ganarJuego() {
+		game.say(self, "GANÉ!")
+		game.onTick(2000, "Ganar juego", {game.stop()})
 	}
 
 	//consultas
@@ -69,13 +81,7 @@ object pepita {
 	//validaciones
 	method validarEnergia() {
 		if (self.seQuedoSinEnergia()) {
-			game.stop()
-		}
-	}
-
-	method validarSiEsAtrapadaPorElCazador() {
-		if (self.esAtrapadaPorElCazador()) {
-			game.stop()
+			self.perderJuego()
 		}
 	}
 }

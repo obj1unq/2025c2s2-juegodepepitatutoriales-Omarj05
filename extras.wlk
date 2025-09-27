@@ -16,6 +16,11 @@ object nido {
     method image() { return "nido.png" }
 }
 
+object muro {
+    const property position = game.center()
+    const property image = "muro.png"
+}
+
 //direcciones de movimiento para pepita
 object derecha {
     method siguiente(personaje) {
@@ -41,7 +46,3 @@ object abajo {
     }
 }
 
-object muro {
-    const property position = game.center()
-    const property image = "muro.png"
-}

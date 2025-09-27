@@ -11,12 +11,14 @@ program pepitaGame {
 	//Valor por defecto game.ground("ground.png")
 	game.addVisual(silvestre)
 	game.addVisual(nido)
+	game.addVisual(muro)
 	game.addVisual(pepita)
 	keyboard.a().onPressDo({pepita.mover(izquierda)})
 	keyboard.d().onPressDo({pepita.mover(derecha)})
 	keyboard.s().onPressDo({pepita.mover(abajo)})
 	keyboard.w().onPressDo({pepita.mover(arriba)})
-	game.showAttributes(pepita)
+	game.onTick(800, "Pepita pierde altura", { pepita.perderAltura() })
+	
 	game.start()
 }
 

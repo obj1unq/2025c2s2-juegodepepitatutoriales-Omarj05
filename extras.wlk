@@ -1,11 +1,6 @@
 import pepita.*
 
-object derecha {
-    method siguiente(personaje) {
-        return personaje.position().right(1)
-    }
-}
-
+//visuales
 object silvestre {
     const property presa = pepita
     method image() { return "silvestre.png" }
@@ -13,10 +8,19 @@ object silvestre {
     method position() {
         return game.at(presa.position().x().max(3), 0)
     }
+}
 
-    method puedeCapturarAPepita() {
-		return self.position() == presa.position()
-	}
+object nido {
+    method position() {  return game.at(8, 8) }
+
+    method image() { return "nido.png" }
+}
+
+//direcciones de movimiento para pepita
+object derecha {
+    method siguiente(personaje) {
+        return personaje.position().right(1)
+    }
 }
 
 object izquierda {
@@ -37,8 +41,7 @@ object abajo {
     }
 }
 
-object nido {
-    method position() {  return game.at(10, 10) }
-
-    method image() { return "nido.png" }
+object muro {
+    const property position = game.center()
+    const property image = "muro.png"
 }

@@ -1,26 +1,46 @@
 import extras.*
 
 object pepita {
-	var energia = 500
-	var property position = game.center()
+	var energia = 100
+	var property position = game.at(7, 7)
 	const property objetivo = nido
 	const property cazador = silvestre
 
+	//acciones
 	method comer(comida) {
 		energia = energia + comida.energiaQueOtorga()
 	}
 
-	method volar(kms) { energia = energia - 10 - kms }
+	method volar(kms) { energia = (energia - (9 * kms)).max(0) }
 	
+	method mover(direccion) { 
+		if (!self.hayMuroEnDireccion(direccion)) {
+			self.validarEnergia()
+			position = direccion.siguiente(self) 
+			self.volar(1)
+		}
+		else {
+			game.say(self, "Hay un muro adelante.")
+		}
+	}
+
+	method perderAltura()  { 
+		self.validarSiEsAtrapadaPorElCazador()
+		if (!self.hayMuroEnDireccion(abajo)) {
+			position = game.at(position.x(), position.down(1).y().max(0)) 
+		}
+	}
+
+	//consultas
 	method energia() { return energia }
 
 	method image() { return "pepita-" + self.estado().nombre() + ".png" }
 
 	method estado() {
-		if (position == objetivo.position()) {
+		if (self.estaEnElObjetivo()) {
 			return ganadora
 		}
-		else if (position == cazador.position()) {
+		else if (self.esPepitaFallecida()) {
 			return perdedora
 		}
 		else {
@@ -28,18 +48,39 @@ object pepita {
 		}
 	}
 
-	method estaEnElNido() { return self.position() == objetivo.position() }
+	method estaEnElObjetivo() { return position == objetivo.position() }
 
-	method mover(direccion) { 
-		position = direccion.siguiente(self) 
-		self.gastarEnergia()
+	method esPepitaFallecida() {
+		return self.esAtrapadaPorElCazador() || self.seQuedoSinEnergia()
+	} 
+
+	method esAtrapadaPorElCazador() {
+		return position == cazador.position()
 	}
 
+	method seQuedoSinEnergia() {
+		return energia == 0
+	}
 
-	method gastarEnergia() { energia = energia - 9 }
+	method hayMuroEnDireccion(direccion) {
+		return direccion.siguiente(self) == muro.position()
+	}
+
+	//validaciones
+	method validarEnergia() {
+		if (self.seQuedoSinEnergia()) {
+			game.stop()
+		}
+	}
+
+	method validarSiEsAtrapadaPorElCazador() {
+		if (self.esAtrapadaPorElCazador()) {
+			game.stop()
+		}
+	}
 }
 
-
+//estados de pepita
 object ganadora {
 	method nombre() { return "grande" }
 }
@@ -51,4 +92,3 @@ object perdedora {
 object normal {
 	method nombre() { return "normal" }
 }
-

@@ -1,4 +1,5 @@
 import wollok.game.*
+import pepita.*
 
 object manzana {
 	const property image = "manzana.png"
@@ -10,6 +11,11 @@ object manzana {
 	
 	method madurar() { madurez += 1 }
 
+	method chocasteConPepita() {
+		pepita.comer(self)
+		game.removeVisual(self)
+	}
+
 }
 
 object alpiste {
@@ -17,5 +23,10 @@ object alpiste {
 	const property position = game.at(6, 6)
 
 	method energiaQueOtorga() { return 20 } 	
+
+	method chocasteConPepita() {
+		pepita.comer(self)
+		game.removeVisual(self)
+	}
 }
 

@@ -1,4 +1,5 @@
 import extras.*
+import comidas.*
 
 object pepita {
 	var energia = 100
@@ -6,11 +7,12 @@ object pepita {
 	const property objetivo = nido
 	const property cazador = silvestre
 	var estado = pepitaNormal
+	const property frutasComidas = #{}
 
 	//acciones
 	method comer(comida) {
 		energia = energia + comida.energiaQueOtorga()
-		game.removeVisual(comida)
+		frutasComidas.add(comida)
 	}
 
 	method volar(kms) { 
@@ -18,27 +20,39 @@ object pepita {
 	}
 	
 	method mover(direccion) {
+		self.validarEnergia()
 		if (self.puedeMover(direccion)) {
-			self.verificarEstado()
 			position = direccion.siguiente(self)
+			self.volar(1)
 		}
 		else {
 			game.say(self, "Ouch! Me choque!")
 		}
 	}
+	
+	method muros() { return [muro1, muro2]}
 
-	method puedeMover(direccion) {
-		return self.hayBordeDelMapa(direccion)
+	method cambiarEstadoDePepitaA(estadoNuevo) { estado = estadoNuevo }
+
+	method aplicarGravedad() {
+		if (self.puedeMover(abajo)) {
+			position = abajo.siguiente(self)
+		}
+	}
+	
+	method perderJuego() {
+		estado = pepitaPerdedora
+		game.say(self, "PERDI!")
+		game.onTick(2000, "Pepita pierde el juego", {game.stop()}) //por alguna razon me da error luego de añadir la pared
 	}
 
-	method hayBordeDelMapa(direccion) {
-		return 
-			direccion.siguiente(self).x().between(0, game.width()-1) and
-			direccion.siguiente(self).y().between(0, game.height()-1)
-	}
-
-	method verificarEstado() {
-		estado = 
+	method ganarJuego() {
+		if (self.heComidoTodasLasFrutas()) {
+			estado = pepitaGanadora 
+			game.say(self, "GANE!")
+			game.onTick(2000, "Pepita gana el juego", {game.stop()}) // lo mismo paasa aqui	
+		}
+		else { game.say(self, "No comi todas las frutas!")}
 	}
 
 	//consultas
@@ -47,10 +61,43 @@ object pepita {
 		return "pepita-" + estado.nombre() + ".png"
 	}
 
-	method cambiarEstadoDePepitaA(estadoNuevo) { estado = estadoNuevo }
+	method tieneEnergia() {
+		return energia > 0
+	}
 
+	method haTerminadoElJuego() { return self.haGanado() || self.haPerdido() }
 	method haPerdido() { return estado == pepitaPerdedora }
 	method haGanado() { return estado == pepitaGanadora }
+
+	method puedeMover(direccion) {
+		return (self.hayBordeDelMapa(direccion) and (!self.haTerminadoElJuego())) and (!self.hayPared(direccion))
+	}
+
+	method hayPared(direccion) {
+		return self.muros().any({ muro => muro.position() == direccion.siguiente(self)})
+	}
+
+	method hayBordeDelMapa(direccion) {
+		return 
+			direccion.siguiente(self).x().between(0, game.width()-1) and
+			direccion.siguiente(self).y().between(0, game.height()-1)
+	}
+
+	method heComidoTodasLasFrutas() {
+		return frutasComidas == self.todasLasFrutasDelJuego()
+	}
+
+	method todasLasFrutasDelJuego() {
+		return #{alpiste, manzana}
+	}
+
+	//validaciones
+	method validarEnergia() {
+		if (!self.tieneEnergia()) {
+			self.perderJuego()
+		}
+	}
+
 }
 
 //estados de pepita
@@ -64,16 +111,8 @@ object pepitaPerdedora {
 	method estado(personaje) {
 		return self.nombre()
 	}
-
-	method esPepitaPerdedora() {
-
-	}
 }
 
 object pepitaGanadora {
-	method nombre() { return "ganadora"}
-}
-
-object pepitaGrande {
-	method nombre() { return "grande" }
+	method nombre() { return "ganadora" }
 }

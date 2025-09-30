@@ -5,6 +5,7 @@ object pepita {
 	var property position = game.at(7, 7)
 	const property objetivo = nido
 	const property cazador = silvestre
+	var estado = pepitaNormal
 
 	//acciones
 	method comer(comida) {
@@ -16,85 +17,63 @@ object pepita {
 		energia = (energia - (9 * kms)).max(0) 
 	}
 	
-	method mover(direccion) { 
-		if (!self.hayMuroEnDireccion(direccion)) {
-			self.validarEnergia()
-			position = direccion.siguiente(self) 
-			self.volar(1)
+	method mover(direccion) {
+		if (self.puedeMover(direccion)) {
+			self.verificarEstado()
+			position = direccion.siguiente(self)
 		}
 		else {
-			game.say(self, "Hay un muro adelante.")
+			game.say(self, "Ouch! Me choque!")
 		}
 	}
 
-	method perderAltura()  { 
-		if (!self.hayMuroEnDireccion(abajo)) {
-			position = game.at(position.x(), position.down(1).y().max(0)) 
-		}
+	method puedeMover(direccion) {
+		return self.hayBordeDelMapa(direccion)
 	}
 
-	method perderJuego() {
-		game.say(self, "¡PERDÍ!")
-		game.onTick(2000, "Perder juego", {game.stop()})
+	method hayBordeDelMapa(direccion) {
+		return 
+			direccion.siguiente(self).x().between(0, game.width()-1) and
+			direccion.siguiente(self).y().between(0, game.height()-1)
 	}
 
-	method ganarJuego() {
-		game.say(self, "GANÉ!")
-		game.onTick(2000, "Ganar juego", {game.stop()})
+	method verificarEstado() {
+		estado = 
 	}
 
 	//consultas
-	method energia() { return energia }
 
-	method image() { return "pepita-" + self.estado().nombre() + ".png" }
-
-	method estado() {
-		if (self.estaEnElObjetivo()) {
-			return ganadora
-		}
-		else if (self.esPepitaFallecida()) {
-			return perdedora
-		}
-		else {
-			return normal
-		}
+	method image() {
+		return "pepita-" + estado.nombre() + ".png"
 	}
 
-	method estaEnElObjetivo() { return position == objetivo.position() }
+	method cambiarEstadoDePepitaA(estadoNuevo) { estado = estadoNuevo }
 
-	method esPepitaFallecida() {
-		return self.esAtrapadaPorElCazador() || self.seQuedoSinEnergia()
-	} 
-
-	method esAtrapadaPorElCazador() {
-		return position == cazador.position()
-	}
-
-	method seQuedoSinEnergia() {
-		return energia == 0
-	}
-
-	method hayMuroEnDireccion(direccion) {
-		return direccion.siguiente(self) == muro.position()
-	}
-
-	//validaciones
-	method validarEnergia() {
-		if (self.seQuedoSinEnergia()) {
-			self.perderJuego()
-		}
-	}
+	method haPerdido() { return estado == pepitaPerdedora }
+	method haGanado() { return estado == pepitaGanadora }
 }
 
 //estados de pepita
-object ganadora {
-	method nombre() { return "grande" }
-}
-
-object perdedora {
-	method nombre() { return "gris" }
-}
-
-object normal {
+object pepitaNormal {
 	method nombre() { return "normal" }
+}
+
+object pepitaPerdedora {
+	method nombre() { return "perdedora" }
+
+	method estado(personaje) {
+		return self.nombre()
+	}
+
+	method esPepitaPerdedora() {
+
+	}
+}
+
+object pepitaGanadora {
+	method nombre() { return "ganadora"}
+}
+
+object pepitaGrande {
+	method nombre() { return "grande" }
 }

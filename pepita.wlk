@@ -11,6 +11,7 @@ object pepita {
 	//acciones
 	method comer(comida) {
 		energia = energia + comida.energiaQueOtorga()
+		comidas.decrementarContador()
 	}
 
 	method volar(kms) { 
@@ -27,6 +28,10 @@ object pepita {
 	method cambiarEstadoDePepitaA(estadoNuevo) { estado = estadoNuevo }
 
 	method aplicarGravedad() {
+		game.onTick(800, "Aplicar gravedad a Pepita", {self.caer()})
+	}
+
+	method caer() {
 		if (self.puedeIrALa(abajo)) {
 			position = abajo.siguiente(self)
 		}

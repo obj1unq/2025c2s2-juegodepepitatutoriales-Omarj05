@@ -1,4 +1,5 @@
 import pepita.*
+import randomizer.*
 
 //visuales
 object silvestre {
@@ -31,6 +32,10 @@ class Muro {
     method chocasteConPepita() {  }
 
     method esAtravesable() { return false }
+}
+
+object factoryMuro {
+    method crear() { return new Muro(position = randomizer.emptyPosition()) }
 }
 
 //direcciones de movimiento para pepita

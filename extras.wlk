@@ -10,6 +10,8 @@ object silvestre {
     }
 
     method chocasteConPepita() { pepita.perderJuego() }
+
+    method esAtravesable() { return true }
 }
 
 object nido {
@@ -18,20 +20,17 @@ object nido {
     method image() { return "nido.png" }
 
     method chocasteConPepita() { pepita.ganarJuego() }
+
+    method esAtravesable() { return true }
 }
 
-object muro1 {
+class Muro {
     const property position = game.center()
     const property image = "muro.png"
 
     method chocasteConPepita() {  }
-}
 
-object muro2 {
-    const property position = game.center().down(1)
-    const property image = "muro.png"
-
-    method chocasteConPepita() {  }
+    method esAtravesable() { return false }
 }
 
 //direcciones de movimiento para pepita
